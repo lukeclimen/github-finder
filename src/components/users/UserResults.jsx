@@ -5,18 +5,19 @@ function UserResults() {
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] =
 		useState(true);
+
 	useEffect(() => {
 		fetchUsers();
 	}, []);
 
 	const fetchUsers = async () => {
 		const response = await fetch(
-			`${process.env.REACT_APP_GITHUB_URL}/users`,
-			{
-				headers: {
-					Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN}`,
-				},
-			}
+			`${process.env.REACT_APP_GITHUB_URL}/users`
+			// {
+			// 	headers: {
+			// 		Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN}`,
+			// 	},
+			// }
 		);
 		const data = await response.json();
 
@@ -33,7 +34,6 @@ function UserResults() {
 				{users.map((user) => (
 					<h3>{user.login}</h3>
 				))}
-				UserResults
 			</div>
 		);
 	} else {
