@@ -16,22 +16,25 @@ export const GithubProvider = ({ children }) => {
 		initialState
 	);
 
-	// Get initial users (testing purposes)
-	const fetchUsers = async () => {
+	// Get search results
+	const searchUsers = async (text) => {
 		setLoading();
+		const params = new URLSearchParams({
+			q: text,
+		});
 		const response = await fetch(
-			`${GITHUB_URL}/users`
+			`${GITHUB_URL}/search/users?${params}`
 			// {
 			// 	headers: {
 			// 		Authorization: `token ${TOKEN}`,
 			// 	},
 			// }
 		);
-		const data = await response.json();
+		const { items } = await response.json();
 
 		dispatch({
 			type: "GET_USERS",
-			payload: data,
+			payload: items,
 		});
 	};
 
@@ -45,7 +48,7 @@ export const GithubProvider = ({ children }) => {
 				users: state.users,
 				isLoading: state.isLoading,
 				//Methods
-				fetchUsers,
+				searchUsers,
 			}}
 		>
 			{children}

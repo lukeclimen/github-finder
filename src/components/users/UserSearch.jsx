@@ -10,7 +10,8 @@ function UserSearch() {
 		setText(event.target.value);
 	};
 
-	const { users } = useContext(GithubContext);
+	const { users, searchUsers } =
+		useContext(GithubContext);
 
 	// Handle the event that the user clicks on the submit butotn
 	const handleSubmit = (event) => {
@@ -19,7 +20,7 @@ function UserSearch() {
 		if (text === "") {
 			alert("WARNING WARNING");
 		} else {
-			// @todo - search users
+			searchUsers(text);
 		}
 		setText("");
 	};
