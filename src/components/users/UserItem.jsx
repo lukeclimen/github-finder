@@ -7,9 +7,9 @@ function UserItem({
 	return (
 		<div className='card shadow-md compact side bg-accent'>
 			<div className='flex-row items-center space-x-4 card-body'>
-				<div className=''>
+				<div className='drop-shadow-lg'>
 					<div className='avatar'>
-						<div className='rounded-full shadow w-14 h-14'>
+						<div className='rounded-full drop-shadow-lg w-14 h-14'>
 							<img
 								src={
 									avatar_url
