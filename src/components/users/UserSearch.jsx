@@ -10,7 +10,7 @@ function UserSearch() {
 		setText(event.target.value);
 	};
 
-	const { users, searchUsers } =
+	const { users, searchUsers, clearUsers } =
 		useContext(GithubContext);
 
 	// Handle the event that the user clicks on the submit butotn
@@ -58,7 +58,10 @@ function UserSearch() {
 			</div>
 			{users.length > 0 && (
 				<div className=''>
-					<button className='btn btn-ghost btn-lg'>
+					<button
+						className='btn btn-ghost btn-lg'
+						onClick={clearUsers}
+					>
 						Clear
 					</button>
 				</div>
