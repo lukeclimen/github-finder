@@ -8,6 +8,7 @@ const TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 export const GithubProvider = ({ children }) => {
 	const initialState = {
 		users: [],
+		highlightUser: {},
 		isLoading: false,
 	};
 
@@ -23,12 +24,12 @@ export const GithubProvider = ({ children }) => {
 			q: text,
 		});
 		const response = await fetch(
-			`${GITHUB_URL}/search/users?${params}`
-			// {
-			// 	headers: {
-			// 		Authorization: `token ${TOKEN}`,
-			// 	},
-			// }
+			`${GITHUB_URL}/search/users?${params}`,
+			{
+				headers: {
+					Authorization: `token ${TOKEN}`,
+				},
+			}
 		);
 		const { items } = await response.json();
 
@@ -36,6 +37,31 @@ export const GithubProvider = ({ children }) => {
 			type: "GET_USERS",
 			payload: items,
 		});
+	};
+
+	// Get search results
+	const getHighlightUser = async (login) => {
+		setLoading();
+
+		const response = await fetch(
+			`${GITHUB_URL}/user?${login}`,
+			{
+				headers: {
+					Authorization: `token ${TOKEN}`,
+				},
+			}
+		);
+
+		if (response.status === 404) {
+			window.location = "/notfound";
+		} else {
+			const data = await response.json();
+
+			dispatch({
+				type: "GET_HIGHLIGHT_USER",
+				payload: data,
+			});
+		}
 	};
 
 	// Clear the current users selection
@@ -53,10 +79,12 @@ export const GithubProvider = ({ children }) => {
 			value={{
 				//Variables
 				users: state.users,
+				highlightUser: state.highlightUser,
 				isLoading: state.isLoading,
 				//Methods
 				searchUsers,
 				clearUsers,
+				getHighlightUser,
 			}}
 		>
 			{children}
