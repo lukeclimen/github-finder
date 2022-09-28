@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import GithubContext from "../../context/github/GithubContext";
+import AlertContext from "../../context/alert/AlertContext";
 
 function UserSearch() {
 	// State for the search bar's text field
@@ -10,15 +11,19 @@ function UserSearch() {
 		setText(event.target.value);
 	};
 
+	// Github Context
 	const { users, searchUsers, clearUsers } =
 		useContext(GithubContext);
+
+	//Alert Context
+	const { setAlert } = useContext(AlertContext);
 
 	// Handle the event that the user clicks on the submit butotn
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
 		if (text === "") {
-			alert("WARNING WARNING");
+			setAlert("Please enter something in", "error");
 		} else {
 			searchUsers(text);
 		}
