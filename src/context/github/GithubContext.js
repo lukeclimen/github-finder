@@ -1,9 +1,15 @@
 import { createContext, useReducer } from "react";
 import githubReducer from "./GithubReducer";
+import axios from "axios";
 
 const GithubContext = createContext();
 const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
-const TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+
+const github = axios.create({
+	baseURL: GITHUB_URL,
+	headers: { Authorization: `token ${GITHUB_TOKEN}` },
+});
 
 export const GithubProvider = ({ children }) => {
 	const initialState = {
@@ -23,19 +29,13 @@ export const GithubProvider = ({ children }) => {
 		const params = new URLSearchParams({
 			q: text,
 		});
-		const response = await fetch(
-			`${GITHUB_URL}/search/users?${params}`,
-			{
-				headers: {
-					Authorization: `token ${TOKEN}`,
-				},
-			}
+		const response = await github.get(
+			`/search/users?${params}`
 		);
-		const { items } = await response.json();
 
 		dispatch({
 			type: "GET_USERS",
-			payload: items,
+			payload: response.data.items,
 		});
 	};
 
@@ -43,23 +43,16 @@ export const GithubProvider = ({ children }) => {
 	const getHighlightUser = async (login) => {
 		setLoading();
 
-		const response = await fetch(
-			`${GITHUB_URL}/user?${login}`,
-			{
-				headers: {
-					Authorization: `token ${TOKEN}`,
-				},
-			}
+		const response = await github.get(
+			`/users/${login}`
 		);
 
-		if (response.status === 404) {
+		if (response.data.status === 404) {
 			window.location = "/notfound";
 		} else {
-			const data = await response.json();
-
 			dispatch({
 				type: "GET_HIGHLIGHT_USER",
-				payload: data,
+				payload: response.data,
 			});
 		}
 	};
